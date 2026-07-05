@@ -1,7 +1,7 @@
 // Base URL of the Node.js/Express backend.
 // Set NEXT_PUBLIC_API_URL in .env.local, e.g.:
 //   NEXT_PUBLIC_API_URL=http://localhost:5000
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ;
+export const API_URL = "https://stock-book.onrender.com/" ;
 
 export async function fetchProducts() {
   const res = await fetch(`${API_URL}/api/products`, { cache: "no-store" });
