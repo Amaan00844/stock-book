@@ -10,7 +10,7 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: "*"
+  origin: "*" ,"https://stock-book-drab.vercel.app/"
 }));
 app.use(express.json());
 
