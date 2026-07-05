@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Env files (contains MONGO_URI, ports, secrets)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Uploaded product photos (user-generated content, not source)
+uploads/*
+!uploads/.gitkeep
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/

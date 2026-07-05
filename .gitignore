@@ -1,0 +1,75 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Env files (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies (each sub-project also ignores its own)
+node_modules/
+
+
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+build/
+
+# Env files
+.env
+.env.local
+.env.*.local
+!.env.local.example
+
+# Vercel
+.vercel
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript (in case types get added later)
+*.tsbuildinfo
+next-env.d.ts
+
+# OS / editors
+.DS_Store
+.vscode/
+
+# Dependencies
+node_modules/
+
+# Env files (contains MONGO_URI, ports, secrets)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Uploaded product photos (user-generated content, not source)
+uploads/*
+!uploads/.gitkeep
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/

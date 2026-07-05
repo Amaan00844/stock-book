@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-paper: #ece7d8;
+  --color-paper-dim: #e0dac4;
+  --color-ink: #202b22;
+  --color-ink-soft: #3d4a3b;
+  --color-brass: #a9782e;
+  --color-brass-light: #c99a4b;
+  --color-brick: #8c3f2c;
+  --color-line: #c7bfa3;
+  --color-moss: #3c5941;
+}
+
+[data-theme="dark"] {
+  --color-paper: #161f19;
+  --color-paper-dim: #1e2a22;
+  --color-ink: #ece7d8;
+  --color-ink-soft: #aeb8a8;
+  --color-brass: #d4a656;
+  --color-brass-light: #e6c07f;
+  --color-brick: #e08469;
+  --color-line: #37453a;
+  --color-moss: #86c091;
+}
+
+html {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Punch-hole for the price-tag card signature element */
+.tag-hole {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-paper);
+  border: 2px solid var(--color-brass);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+/* String loop through the punch hole */
+.tag-string {
+  width: 30px;
+  height: 16px;
+  border: 2px solid var(--color-brass);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  opacity: 0.7;
+}
+
+/* Subtle paper grain so the ledger background doesn't feel flat */
+.paper-grain {
+  background-image: radial-gradient(circle at 1px 1px, rgba(128, 128, 128, 0.09) 1px, transparent 0);
+  background-size: 18px 18px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Skeleton shimmer used while photos / list are loading */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-paper-dim);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  background-size: 400px 100%;
+}
+[data-theme="dark"] .skeleton::after {
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
+
+/* Focus visibility kept crisp in both themes */
+:focus-visible {
+  outline: 2px solid var(--color-brass);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
