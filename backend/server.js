@@ -9,7 +9,9 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: "*"
+}));
 app.use(express.json());
 
 // Serve uploaded photos statically so the app can display them, e.g.
