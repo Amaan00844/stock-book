@@ -1,5 +1,5 @@
 // Base URL of the Node.js/Express backend.
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://stock-book.onrender.com";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://stock-book-3.onrender.com/";
 
 function getAuthHeaders(includeJson = false) {
   const token = typeof window !== "undefined" ? localStorage.getItem("stockbook-token") : null;
