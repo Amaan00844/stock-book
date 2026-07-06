@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import ThemeToggle from "@/components/ThemeToggle";
 import PageTransition from "@/components/PageTransition";
+import SeoJsonLd from "@/components/SeoJsonLd";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -24,8 +25,42 @@ const body = Inter({
 });
 
 export const metadata = {
-  title: "Stock Book — Product Tracker",
-  description: "Photograph your stock, tag the price, keep the ledger.",
+  metadataBase: new URL("https://stock-book-drab.vercel.app"),
+  title: {
+    default: "Stock Book | Simple Inventory Ledger",
+    template: "%s | Stock Book",
+  },
+  description:
+    "Stock Book helps you photograph stock, tag prices, and keep a searchable inventory ledger for everyday product tracking.",
+  keywords: [
+    "inventory tracker",
+    "stock book",
+    "product ledger",
+    "inventory management",
+    "small business inventory",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Stock Book | Simple Inventory Ledger",
+    description:
+      "Photograph your stock, tag the price, and keep a searchable ledger in one place.",
+    url: "https://stock-book-drab.vercel.app/",
+    siteName: "Stock Book",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Stock Book | Simple Inventory Ledger",
+    description:
+      "Photograph your stock, tag the price, and keep a searchable ledger in one place.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 // Runs before paint so the page never flashes the wrong theme.
@@ -43,6 +78,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="theme-color" content="#f7efe4" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
       </head>
       <body
@@ -79,6 +116,7 @@ export default function RootLayout({ children }) {
           <main className="mx-auto max-w-5xl px-5 sm:px-8">
             <PageTransition>{children}</PageTransition>
           </main>
+          <SeoJsonLd />
           <footer className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-xs text-ink-soft/70">
             Every entry is timestamped in London time the moment it's saved.
           </footer>

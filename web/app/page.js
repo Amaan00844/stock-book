@@ -88,6 +88,9 @@ function LedgerContent() {
             {products.length} item{products.length === 1 ? "" : "s"} on the shelf
           </p>
           <h1 className="font-display text-3xl font-bold text-ink">The Ledger</h1>
+          <p className="mt-2 max-w-2xl text-sm text-ink-soft">
+            Keep a clear inventory record of every item, from product photos and prices to searchable notes in one streamlined stock book.
+          </p>
         </div>
         <div className="text-right">
           <p className="font-mono text-xs uppercase tracking-widest text-ink-soft/70">
