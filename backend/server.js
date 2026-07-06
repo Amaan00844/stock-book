@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const connectDB = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 // http://<server-ip>:5000/uploads/1720012345-shirt.jpg
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 
 app.get("/", (req, res) => {

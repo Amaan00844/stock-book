@@ -109,6 +109,12 @@ export default function RootLayout({ children }) {
                 >
                   + New item
                 </Link>
+                <Link
+                  href="/login"
+                  className="px-3 py-1.5 rounded-full text-ink-soft hover:bg-paper-dim transition-colors"
+                >
+                  Login
+                </Link>
                 <ThemeToggle />
               </nav>
             </div>

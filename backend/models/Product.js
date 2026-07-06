@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     // Path (URL) to the stored photo, e.g. /uploads/1720012345-shirt.jpg
     photoUrl: {
       type: String,

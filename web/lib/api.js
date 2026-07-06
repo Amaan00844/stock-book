@@ -1,14 +1,56 @@
 // Base URL of the Node.js/Express backend.
-export const API_URL = "https://stock-book.onrender.com";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://stock-book.onrender.com";
+
+function getAuthHeaders(includeJson = false) {
+  const token = typeof window !== "undefined" ? localStorage.getItem("stockbook-token") : null;
+  const headers = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (includeJson) headers["Content-Type"] = "application/json";
+  return headers;
+}
+
+export async function login({ username, password }) {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
+    method: "POST",
+    headers: getAuthHeaders(true),
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Login failed");
+  }
+  return res.json();
+}
+
+export async function register({ username, password }) {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
+    method: "POST",
+    headers: getAuthHeaders(true),
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Registration failed");
+  }
+  return res.json();
+}
 
 export async function fetchProducts() {
-  const res = await fetch(`${API_URL}/api/products`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/api/products`, {
+    cache: "no-store",
+    headers: getAuthHeaders(),
+  });
   if (!res.ok) throw new Error("Failed to load products");
   return res.json();
 }
 
 export async function fetchProduct(id) {
-  const res = await fetch(`${API_URL}/api/products/${id}`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/api/products/${id}`, {
+    cache: "no-store",
+    headers: getAuthHeaders(),
+  });
   if (!res.ok) throw new Error("Failed to load product");
   return res.json();
 }
@@ -22,6 +64,7 @@ export async function createProduct({ photoFile, price, name, currency }) {
 
   const res = await fetch(`${API_URL}/api/products`, {
     method: "POST",
+    headers: getAuthHeaders(),
     body: formData,
   });
 
@@ -33,7 +76,10 @@ export async function createProduct({ photoFile, price, name, currency }) {
 }
 
 export async function deleteProduct(id) {
-  const res = await fetch(`${API_URL}/api/products/${id}`, { method: "DELETE" });
+  const res = await fetch(`${API_URL}/api/products/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
   if (!res.ok) throw new Error("Failed to delete product");
   return res.json();
 }

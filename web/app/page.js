@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { fetchProducts } from "@/lib/api";
 import ProductTag from "@/components/ProductTag";
 import TagSkeleton from "@/components/TagSkeleton";
+import HeroSection from "@/components/HeroSection";
 import { useToast } from "@/components/ToastProvider";
 
 const SORTS = {
@@ -35,8 +36,13 @@ function LedgerContent() {
   const { showToast } = useToast();
 
   useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("stockbook-token") : null;
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
     load();
-  }, []);
+  }, [router]);
 
   // Show a confirmation toast after redirecting back from "Add item",
   // then clean the URL so it doesn't re-fire on refresh.
@@ -81,7 +87,9 @@ function LedgerContent() {
   const total = products.reduce((sum, p) => sum + Number(p.price || 0), 0);
 
   return (
-    <div className="py-10">
+    <div className="py-10 space-y-8">
+      <HeroSection />
+
       <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
         <div>
           <p className="font-mono text-xs uppercase tracking-widest text-brass mb-1">

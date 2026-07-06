@@ -2,6 +2,7 @@ const express = require("express");
 const moment = require("moment-timezone");
 const Product = require("../models/Product");
 const upload = require("../middleware/upload");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 const TIMEZONE = process.env.APP_TIMEZONE || "Europe/London";
@@ -12,7 +13,7 @@ const TIMEZONE = process.env.APP_TIMEZONE || "Europe/London";
  * Date/time is NEVER taken from the client - it is stamped by the server
  * the instant the request is received, converted to Europe/London.
  */
-router.post("/", upload.single("photo"), async (req, res) => {
+router.post("/", auth, upload.single("photo"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "A product photo is required." });
@@ -28,6 +29,7 @@ router.post("/", upload.single("photo"), async (req, res) => {
     const nowLondon = moment(nowUTC).tz(TIMEZONE).format("YYYY-MM-DD HH:mm:ss (z)");
 
     const product = await Product.create({
+      user: req.user.id,
       photoUrl: `/uploads/${req.file.filename}`,
       price: Number(price),
       currency: currency || "GBP",
@@ -48,9 +50,9 @@ router.post("/", upload.single("photo"), async (req, res) => {
  * GET /api/products
  * Returns all products, newest first.
  */
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
-    const products = await Product.find().sort({ capturedAtUTC: -1 });
+    const products = await Product.find({ user: req.user.id }).sort({ capturedAtUTC: -1 });
     res.json(products);
   } catch (err) {
     console.error(err);
@@ -61,9 +63,9 @@ router.get("/", async (req, res) => {
 /**
  * GET /api/products/:id
  */
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ _id: req.params.id, user: req.user.id });
     if (!product) return res.status(404).json({ error: "Product not found." });
     res.json(product);
   } catch (err) {
@@ -74,9 +76,9 @@ router.get("/:id", async (req, res) => {
 /**
  * DELETE /api/products/:id
  */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const product = await Product.findOneAndDelete({ _id: req.params.id, user: req.user.id });
     if (!product) return res.status(404).json({ error: "Product not found." });
     res.json({ message: "Product deleted." });
   } catch (err) {

@@ -22,9 +22,15 @@ export default function AddItemPage() {
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("stockbook-token") : null;
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+
     const t = setInterval(() => setClock(nowInLondon()), 1000);
     return () => clearInterval(t);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (!photoFile) {
