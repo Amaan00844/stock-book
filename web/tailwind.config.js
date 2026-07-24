@@ -17,6 +17,7 @@ module.exports = {
         brick: "var(--color-brick)",
         line: "var(--color-line)",
         moss: "var(--color-moss)",
+        surface: "var(--color-surface)",
       },
       fontFamily: {
         display: ["var(--font-display)"],

@@ -86,32 +86,32 @@ export default function RootLayout({ children }) {
         className={`${display.variable} ${mono.variable} ${body.variable} font-body paper-grain min-h-screen`}
       >
         <Providers>
-          <header className="border-b border-line/70 bg-paper/95 backdrop-blur-sm sticky top-0 z-20">
-            <div className="mx-auto max-w-5xl px-5 sm:px-8 py-4 flex items-center justify-between">
+          <header className="border-b border-line bg-paper/95 backdrop-blur-md sticky top-0 z-20 shadow-sm">
+            <div className="mx-auto max-w-5xl px-5 sm:px-8 py-3.5 flex items-center justify-between">
               <Link href="/" className="flex items-center gap-3 group">
-                <span className="w-9 h-9 rounded-sm bg-ink text-paper flex items-center justify-center font-display font-bold text-sm rotate-[-3deg] group-hover:rotate-0 transition-transform">
+                <span className="w-9 h-9 rounded-lg bg-ink text-paper flex items-center justify-center font-display font-bold text-sm rotate-[-3deg] group-hover:rotate-0 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-ink/20">
                   £
                 </span>
                 <span className="font-display font-bold text-lg tracking-tight text-ink">
                   Stock Book
                 </span>
               </Link>
-              <nav className="flex items-center gap-2 text-sm font-medium">
+              <nav className="flex items-center gap-1.5 text-sm font-medium">
                 <Link
                   href="/"
-                  className="px-3 py-1.5 rounded-full text-ink-soft hover:bg-paper-dim transition-colors"
+                  className="px-3.5 py-1.5 rounded-full text-ink-soft hover:bg-paper-dim hover:text-ink transition-all duration-200"
                 >
                   Ledger
                 </Link>
                 <Link
                   href="/add"
-                  className="px-3.5 py-1.5 rounded-full bg-ink text-paper hover:bg-moss transition-colors"
+                  className="px-4 py-1.5 rounded-full bg-ink text-paper hover:bg-moss transition-all duration-200 hover:shadow-md shadow-ink/10"
                 >
                   + New item
                 </Link>
                 <Link
                   href="/login"
-                  className="px-3 py-1.5 rounded-full text-ink-soft hover:bg-paper-dim transition-colors"
+                  className="px-3.5 py-1.5 rounded-full text-ink-soft hover:bg-paper-dim hover:text-ink transition-all duration-200"
                 >
                   Login
                 </Link>
@@ -123,8 +123,15 @@ export default function RootLayout({ children }) {
             <PageTransition>{children}</PageTransition>
           </main>
           <SeoJsonLd />
-          <footer className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-xs text-ink-soft/70">
-            Every entry is timestamped in London time the moment it's saved.
+          <footer className="mx-auto max-w-5xl px-5 sm:px-8 py-10 border-t border-line/50 mt-10">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p className="text-xs text-ink-soft">
+                Every entry is timestamped in London time the moment it's saved.
+              </p>
+              <p className="text-xs text-ink-soft/60 font-mono">
+                © {new Date().getFullYear()} Stock Book
+              </p>
+            </div>
           </footer>
         </Providers>
       </body>

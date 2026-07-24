@@ -3,27 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --color-paper: #ece7d8;
-  --color-paper-dim: #e0dac4;
-  --color-ink: #202b22;
-  --color-ink-soft: #3d4a3b;
-  --color-brass: #a9782e;
+  --color-paper: #f5f0e8;
+  --color-paper-dim: #ede6d4;
+  --color-ink: #1a2419;
+  --color-ink-soft: #4a5a47;
+  --color-brass: #9a6d24;
   --color-brass-light: #c99a4b;
   --color-brick: #8c3f2c;
-  --color-line: #c7bfa3;
-  --color-moss: #3c5941;
+  --color-line: #c4b99a;
+  --color-moss: #2e5235;
+  --color-surface: rgba(255,255,255,0.6);
+  --color-surface-hover: rgba(255,255,255,0.85);
+  --glow-brass: 0 0 24px rgba(154,109,36,0.15);
+  --glow-moss: 0 0 24px rgba(46,82,53,0.12);
 }
 
 [data-theme="dark"] {
-  --color-paper: #161f19;
-  --color-paper-dim: #1e2a22;
-  --color-ink: #ece7d8;
-  --color-ink-soft: #aeb8a8;
-  --color-brass: #d4a656;
-  --color-brass-light: #e6c07f;
-  --color-brick: #e08469;
-  --color-line: #37453a;
-  --color-moss: #86c091;
+  --color-paper: #0f1612;
+  --color-paper-dim: #162019;
+  --color-ink: #f0ebe0;
+  --color-ink-soft: #c8d4c2;
+  --color-brass: #e8b96a;
+  --color-brass-light: #f2cf93;
+  --color-brick: #f09070;
+  --color-line: #2a3d2e;
+  --color-moss: #7ecb8a;
+  --color-surface: rgba(255,255,255,0.05);
+  --color-surface-hover: rgba(255,255,255,0.09);
+  --glow-brass: 0 0 32px rgba(232,185,106,0.18);
+  --glow-moss: 0 0 32px rgba(126,203,138,0.15);
 }
 
 html {
@@ -37,44 +45,51 @@ html,
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Punch-hole for the price-tag card signature element */
+/* ── Background texture ── */
+.paper-grain {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(128,128,128,0.07) 1px, transparent 0);
+  background-size: 20px 20px;
+}
+[data-theme="dark"] .paper-grain {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.025) 1px, transparent 0);
+  background-size: 20px 20px;
+}
+
+/* ── Price-tag punch-hole ── */
 .tag-hole {
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: var(--color-paper);
   border: 2px solid var(--color-brass);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
 }
 
-/* String loop through the punch hole */
 .tag-string {
   width: 30px;
   height: 16px;
   border: 2px solid var(--color-brass);
   border-bottom: none;
   border-radius: 16px 16px 0 0;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
-/* Subtle paper grain so the ledger background doesn't feel flat */
-.paper-grain {
-  background-image: radial-gradient(circle at 1px 1px, rgba(128, 128, 128, 0.09) 1px, transparent 0);
-  background-size: 18px 18px;
-}
-
+/* ── Utility ── */
 .tabular {
   font-variant-numeric: tabular-nums;
 }
 
-/* Skeleton shimmer used while photos / list are loading */
+/* ── Skeleton shimmer ── */
 .skeleton {
   position: relative;
   overflow: hidden;
   background-color: var(--color-paper-dim);
+  border-radius: 4px;
 }
 .skeleton::after {
   content: "";
@@ -83,31 +98,86 @@ body {
   background-image: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.25),
+    rgba(255,255,255,0.3),
     transparent
   );
   background-size: 400px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
 }
 [data-theme="dark"] .skeleton::after {
   background-image: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.08),
+    rgba(255,255,255,0.07),
     transparent
   );
 }
 
-/* Focus visibility kept crisp in both themes */
+/* ── Focus ring ── */
 :focus-visible {
   outline: 2px solid var(--color-brass);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
+/* ── Scrollbar (dark mode) ── */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 6px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--color-paper-dim);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 10px;
+}
+
+/* ── Glass card utility ── */
+.glass-card {
+  background: var(--color-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-line);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.glass-card:hover {
+  background: var(--color-surface-hover);
+}
+[data-theme="dark"] .glass-card {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
+}
+
+/* ── Glow utilities ── */
+.glow-brass {
+  box-shadow: var(--glow-brass);
+}
+.glow-moss {
+  box-shadow: var(--glow-moss);
+}
+
+/* ── Input dark-mode fix ── */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  color-scheme: dark;
+  background-color: rgba(255,255,255,0.06);
+  color: var(--color-ink);
+  border-color: var(--color-line);
+}
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: rgba(200,212,194,0.45);
+}
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+  background-color: rgba(255,255,255,0.09);
+  border-color: var(--color-brass);
+}
+
+/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

@@ -35,7 +35,7 @@ export default function ProductTag({ product, index = 0, onDeleted, onDeleteErro
         <div className="tag-hole" />
       </div>
 
-      <div className="relative bg-paper border border-line rounded-[4px] shadow-tag overflow-hidden">
+      <div className="relative bg-paper border border-line rounded-[6px] shadow-tag overflow-hidden transition-shadow duration-200 hover:shadow-[0_8px_32px_rgba(0,0,0,0.18)] dark:hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)] dark:border-line/80">
         <div className="relative w-full aspect-[4/3] bg-paper-dim">
           {!imgLoaded && product.photoUrl && <div className="skeleton absolute inset-0" />}
 
@@ -87,14 +87,14 @@ export default function ProductTag({ product, index = 0, onDeleted, onDeleteErro
         </div>
 
         <div className="p-4 border-t border-dashed border-line">
-          <p className="font-display font-medium text-ink truncate">
+          <p className="font-display font-semibold text-ink truncate">
             {product.name || "Untitled item"}
           </p>
-          <div className="mt-1.5 flex items-baseline justify-between">
-            <span className="font-mono text-xl font-semibold text-moss tabular">
+          <div className="mt-1.5 flex items-baseline justify-between gap-2">
+            <span className="font-mono text-xl font-bold text-moss tabular">
               £{Number(product.price).toFixed(2)}
             </span>
-            <span className="text-[11px] font-mono text-ink-soft/70 tabular">
+            <span className="text-[10px] font-mono text-ink-soft tabular flex-shrink-0">
               {product.capturedAtLondon}
             </span>
           </div>
