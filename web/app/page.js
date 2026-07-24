@@ -7,6 +7,7 @@ import { fetchProducts } from "@/lib/api";
 import ProductTag from "@/components/ProductTag";
 import TagSkeleton from "@/components/TagSkeleton";
 import HeroSection from "@/components/HeroSection";
+import ItemDrawer from "@/components/ItemDrawer";
 import { useToast } from "@/components/ToastProvider";
 
 const SORTS = {
@@ -30,6 +31,9 @@ function LedgerContent() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("newest");
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -44,8 +48,18 @@ function LedgerContent() {
     load();
   }, [router]);
 
-  // Show a confirmation toast after redirecting back from "Add item",
-  // then clean the URL so it doesn't re-fire on refresh.
+  // Open item drawer if URL parameter `item` is set
+  useEffect(() => {
+    const itemId = searchParams.get("item");
+    if (itemId && products.length > 0) {
+      const match = products.find((p) => p._id === itemId);
+      if (match) {
+        setSelectedProduct(match);
+        setDrawerOpen(true);
+      }
+    }
+  }, [searchParams, products]);
+
   useEffect(() => {
     if (searchParams.get("saved") === "1") {
       showToast("Saved to the ledger.", { type: "success" });
@@ -77,12 +91,34 @@ function LedgerContent() {
     showToast("Could not delete this item. Try again.", { type: "error" });
   };
 
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setDrawerOpen(true);
+  };
+
+  const categories = useMemo(() => {
+    const set = new Set();
+    products.forEach((p) => {
+      if (p.category) set.add(p.category);
+    });
+    return ["ALL", ...Array.from(set)];
+  }, [products]);
+
   const visibleProducts = useMemo(() => {
-    const filtered = query
-      ? products.filter((p) => (p.name || "Untitled item").toLowerCase().includes(query.toLowerCase()))
-      : products;
+    let filtered = products;
+
+    if (selectedCategory !== "ALL") {
+      filtered = filtered.filter((p) => p.category === selectedCategory);
+    }
+
+    if (query) {
+      filtered = filtered.filter((p) =>
+        (p.name || "Untitled item").toLowerCase().includes(query.toLowerCase())
+      );
+    }
+
     return [...filtered].sort(SORTS[sort].fn);
-  }, [products, query, sort]);
+  }, [products, query, sort, selectedCategory]);
 
   const total = products.reduce((sum, p) => sum + Number(p.price || 0), 0);
 
@@ -90,7 +126,7 @@ function LedgerContent() {
     <div className="py-10 space-y-8">
       <HeroSection />
 
-      <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
+      <div className="flex flex-wrap items-end justify-between gap-4 mb-4">
         <div>
           <p className="font-mono text-xs uppercase tracking-widest text-brass mb-1">
             {products.length} item{products.length === 1 ? "" : "s"} on the shelf
@@ -110,31 +146,54 @@ function LedgerContent() {
         </div>
       </div>
 
+      {/* Category Pills & Search & Sort Bar */}
       {!loading && !error && products.length > 0 && (
-        <div className="flex flex-wrap items-center gap-3 mb-6">
-          <div className="relative flex-1 min-w-[180px]">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft/60 text-sm">
-              ⌕
-            </span>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search items…"
-              className="w-full rounded-md border border-line bg-white/40 dark:bg-black/10 pl-8 pr-3 py-2 text-sm text-ink placeholder:text-ink-soft/50 focus:outline-none focus:ring-2 focus:ring-brass"
-            />
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative flex-1 min-w-[180px]">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft/60 text-sm">
+                ⌕
+              </span>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search items by title or category..."
+                className="w-full rounded-xl border border-line bg-white/40 dark:bg-black/10 pl-8 pr-3 py-2.5 text-sm text-ink placeholder:text-ink-soft/50 focus:outline-none focus:ring-2 focus:ring-brass"
+              />
+            </div>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="rounded-xl border border-line bg-white/40 dark:bg-black/10 px-3 py-2.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brass"
+            >
+              {Object.entries(SORTS).map(([key, { label }]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
           </div>
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="rounded-md border border-line bg-white/40 dark:bg-black/10 px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brass"
-          >
-            {Object.entries(SORTS).map(([key, { label }]) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
-          </select>
+
+          {/* Category Pills */}
+          {categories.length > 1 && (
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+              <span className="text-xs font-mono uppercase text-ink-soft mr-1">Category:</span>
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                    selectedCategory === cat
+                      ? "bg-ink text-paper shadow-sm"
+                      : "bg-paper-dim/60 text-ink-soft hover:text-ink hover:bg-paper-dim"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -147,20 +206,20 @@ function LedgerContent() {
       )}
 
       {!loading && error && (
-        <div className="border border-brick/30 bg-brick/5 rounded-md p-5 text-brick text-sm">
+        <div className="border border-brick/30 bg-brick/5 rounded-2xl p-5 text-brick text-sm">
           {error}
         </div>
       )}
 
       {!loading && !error && products.length === 0 && (
-        <div className="border border-dashed border-line rounded-md p-10 text-center animate-fade-up">
-          <p className="font-display text-lg text-ink mb-2">Nothing on the shelf yet</p>
-          <p className="text-sm text-ink-soft mb-5">
+        <div className="border border-dashed border-line rounded-2xl p-12 text-center animate-fade-up">
+          <p className="font-display text-xl text-ink mb-2 font-bold">Nothing on the shelf yet</p>
+          <p className="text-sm text-ink-soft mb-6 max-w-md mx-auto">
             Photograph your first item and tag it with a price to start the ledger.
           </p>
           <Link
             href="/add"
-            className="inline-flex px-4 py-2 rounded-full bg-ink text-paper text-sm font-medium hover:bg-moss transition-colors"
+            className="inline-flex px-6 py-3 rounded-full bg-ink text-paper text-sm font-semibold hover:bg-moss transition-colors shadow-lg"
           >
             + New item
           </Link>
@@ -169,7 +228,7 @@ function LedgerContent() {
 
       {!loading && !error && products.length > 0 && visibleProducts.length === 0 && (
         <p className="text-sm text-ink-soft py-10 text-center">
-          No items match "{query}".
+          No items match your criteria.
         </p>
       )}
 
@@ -182,10 +241,19 @@ function LedgerContent() {
               index={i}
               onDeleted={handleDeleted}
               onDeleteError={handleDeleteError}
+              onClick={handleProductClick}
             />
           ))}
         </div>
       )}
+
+      {/* Item Slide-over Drawer */}
+      <ItemDrawer
+        product={selectedProduct}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onDeleted={handleDeleted}
+      />
     </div>
   );
 }

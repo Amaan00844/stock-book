@@ -1,8 +1,7 @@
 import { Space_Grotesk, IBM_Plex_Mono, Inter } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
 import Providers from "@/components/Providers";
-import ThemeToggle from "@/components/ThemeToggle";
+import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import SeoJsonLd from "@/components/SeoJsonLd";
 
@@ -27,23 +26,23 @@ const body = Inter({
 export const metadata = {
   metadataBase: new URL("https://stock-book-drab.vercel.app"),
   title: {
-    default: "Stock Book | Simple Inventory Ledger",
+    default: "Stock Book | Smart Inventory Ledger",
     template: "%s | Stock Book",
   },
   description:
-    "Stock Book helps you photograph stock, tag prices, and keep a searchable inventory ledger for everyday product tracking.",
+    "Stock Book helps you photograph stock, tag prices, analyze financial metrics, and keep a searchable inventory ledger.",
   keywords: [
     "inventory tracker",
     "stock book",
     "product ledger",
-    "inventory management",
-    "small business inventory",
+    "inventory analytics",
+    "stock management",
   ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Stock Book | Simple Inventory Ledger",
+    title: "Stock Book | Smart Inventory Ledger",
     description:
       "Photograph your stock, tag the price, and keep a searchable ledger in one place.",
     url: "https://stock-book-drab.vercel.app/",
@@ -53,7 +52,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stock Book | Simple Inventory Ledger",
+    title: "Stock Book | Smart Inventory Ledger",
     description:
       "Photograph your stock, tag the price, and keep a searchable ledger in one place.",
   },
@@ -63,7 +62,6 @@ export const metadata = {
   },
 };
 
-// Runs before paint so the page never flashes the wrong theme.
 const noFlashScript = `
 (function () {
   try {
@@ -83,47 +81,15 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
       </head>
       <body
-        className={`${display.variable} ${mono.variable} ${body.variable} font-body paper-grain min-h-screen`}
+        className={`${display.variable} ${mono.variable} ${body.variable} font-body paper-grain min-h-screen pb-16 md:pb-0`}
       >
         <Providers>
-          <header className="border-b border-line bg-paper/95 backdrop-blur-md sticky top-0 z-20 shadow-sm">
-            <div className="mx-auto max-w-5xl px-5 sm:px-8 py-3.5 flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-3 group">
-                <span className="w-9 h-9 rounded-lg bg-ink text-paper flex items-center justify-center font-display font-bold text-sm rotate-[-3deg] group-hover:rotate-0 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-ink/20">
-                  £
-                </span>
-                <span className="font-display font-bold text-lg tracking-tight text-ink">
-                  Stock Book
-                </span>
-              </Link>
-              <nav className="flex items-center gap-1.5 text-sm font-medium">
-                <Link
-                  href="/"
-                  className="px-3.5 py-1.5 rounded-full text-ink-soft hover:bg-paper-dim hover:text-ink transition-all duration-200"
-                >
-                  Ledger
-                </Link>
-                <Link
-                  href="/add"
-                  className="px-4 py-1.5 rounded-full bg-ink text-paper hover:bg-moss transition-all duration-200 hover:shadow-md shadow-ink/10"
-                >
-                  + New item
-                </Link>
-                <Link
-                  href="/login"
-                  className="px-3.5 py-1.5 rounded-full text-ink-soft hover:bg-paper-dim hover:text-ink transition-all duration-200"
-                >
-                  Login
-                </Link>
-                <ThemeToggle />
-              </nav>
-            </div>
-          </header>
-          <main className="mx-auto max-w-5xl px-5 sm:px-8">
+          <Navbar />
+          <main className="mx-auto max-w-5xl px-4 sm:px-8">
             <PageTransition>{children}</PageTransition>
           </main>
           <SeoJsonLd />
-          <footer className="mx-auto max-w-5xl px-5 sm:px-8 py-10 border-t border-line/50 mt-10">
+          <footer className="mx-auto max-w-5xl px-4 sm:px-8 py-10 border-t border-line/50 mt-10">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <p className="text-xs text-ink-soft">
                 Every entry is timestamped in London time the moment it's saved.
