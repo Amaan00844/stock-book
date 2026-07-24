@@ -13,7 +13,7 @@ connectDB();
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://agentic-chat-assistant.vercel.app",
+    "https://stock-book-beta.vercel.app",
   
   ],
 }));
