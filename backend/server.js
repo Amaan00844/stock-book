@@ -11,7 +11,11 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: "*" 
+  origin: [
+    "http://localhost:3000",
+    "https://agentic-chat-assistant.vercel.app",
+  
+  ],
 }));
 app.use(express.json());
 
